@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "design-router-mcp"
+name = "gpt-5.5-mcp"
 version = "0.2.1"
-description = "Clean public local-LLM design packet router for frontend UI generation."
+description = "Open-source GPT-5.5 MCP design packet router for frontend UI generation."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -13,7 +13,7 @@ license-files = ["LICENSE"]
 authors = [
   { name = "FoldOps", email = "opensource@foldops.dev" },
 ]
-keywords = ["mcp", "design-router", "packet", "frontend", "local-llm", "ui"]
+keywords = ["mcp", "gpt-5.5", "design-router", "packet", "frontend", "ui"]
 dependencies = [
   "pydantic>=2.8,<3",
 ]
@@ -27,7 +27,7 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-urls = { Homepage = "https://github.com/alexalexalex222/design-router-local-llm", Documentation = "https://github.com/alexalexalex222/design-router-local-llm#readme", Repository = "https://github.com/alexalexalex222/design-router-local-llm", Issues = "https://github.com/alexalexalex222/design-router-local-llm/issues" }
+urls = { Homepage = "https://github.com/alexalexalex222/gpt-5.5-mcp", Documentation = "https://github.com/alexalexalex222/gpt-5.5-mcp#readme", Repository = "https://github.com/alexalexalex222/gpt-5.5-mcp", Issues = "https://github.com/alexalexalex222/gpt-5.5-mcp/issues" }
 
 [project.optional-dependencies]
 dev = [
@@ -39,10 +39,11 @@ mcp = [
 ]
 
 [project.scripts]
+"gpt-5.5-packet" = "design_router_mcp.cli:main"
+"gpt-5.5-mcp" = "design_router_mcp.gpt55_mcp_server:main"
 design-router-packet = "design_router_mcp.cli:main"
 design-router-mcp = "design_router_mcp.mcp_server:main"
 design-router-mcp-stdio = "design_router_mcp.mcp_server:main"
-design-router-local-llm = "design_router_mcp.local_llm_mcp_server:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

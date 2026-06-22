@@ -1,6 +1,6 @@
-# Design Router Local LLM
+# gpt-5.5-mcp
 
-Design Router gives coding agents a better starting point for UI work.
+`gpt-5.5-mcp` gives coding agents a better starting point for UI work.
 
 Most models can write HTML and CSS, but many of them drift into generic layouts:
 big hero, three cards, vague copy, fake stats, and weak mobile states. Design
@@ -8,7 +8,7 @@ Router fixes the starting context. It turns a frontend brief into a compact
 design packet with a relevant anchor, hard UI rules, proof-safety rules, source
 snippets, and layout checks.
 
-This repo is the open-source local-LLM version. It keeps the full canonical MCP
+This repo is the open-source GPT-5.5 MCP version. It keeps the full canonical MCP
 runtime, routing engine, packet renderer, source excerpt loader, validation
 checks, shared UI atoms, and the routed goldenset library used by the server.
 Non-public handoffs, local caches, old benchmark dumps, scratch scripts, and raw
@@ -55,12 +55,12 @@ Create a packet:
 PYTHONPATH=src python -m design_router_mcp.cli --repo-root . export \
   --surface website.local_service \
   --task "Build a serious martial arts gym homepage" \
-  --output-dir /tmp/design-router-packet \
+  --output-dir /tmp/gpt-5.5-mcp-packet \
   --token-mode compact \
   --stack html_css
 ```
 
-Then give `/tmp/design-router-packet/PACKET.md` to your coding agent.
+Then give `/tmp/gpt-5.5-mcp-packet/PACKET.md` to your coding agent.
 
 ## LM Studio
 
@@ -69,9 +69,9 @@ Point LM Studio's MCP config at the local server:
 ```json
 {
   "mcpServers": {
-    "design-router-live": {
-      "command": "/absolute/path/to/.venv/bin/design-router-local-llm",
-      "args": ["--repo-root", "/absolute/path/to/design-router-local-llm"]
+    "gpt-5.5-mcp": {
+      "command": "/absolute/path/to/.venv/bin/gpt-5.5-mcp",
+      "args": ["--repo-root", "/absolute/path/to/gpt-5.5-mcp"]
     }
   }
 }
