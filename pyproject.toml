@@ -13,7 +13,30 @@ license-files = ["LICENSE"]
 authors = [
   { name = "FoldOps", email = "opensource@foldops.dev" },
 ]
-keywords = ["mcp", "gpt-5.5", "design-router", "packet", "frontend", "ui"]
+keywords = [
+  "mcp",
+  "mcp-server",
+  "model-context-protocol",
+  "design-router",
+  "gpt-5.5",
+  "packet",
+  "ai-agents",
+  "coding-agents",
+  "llm",
+  "local-llm",
+  "local-ai",
+  "frontend",
+  "frontend-development",
+  "ui",
+  "ui-design",
+  "ui-generation",
+  "web-design",
+  "design-system",
+  "code-generation",
+  "generative-ai",
+  "python",
+  "opencode",
+]
 dependencies = [
   "pydantic>=2.8,<3",
 ]

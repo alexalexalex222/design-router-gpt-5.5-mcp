@@ -1,5 +1,10 @@
 # Design Router GPT-5.5 MCP
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-111111.svg)](LICENSE)
+![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-1f6feb.svg)
+![MCP Server](https://img.shields.io/badge/MCP-server-111111.svg)
+![Local-first](https://img.shields.io/badge/local--first-coding_agents-0f766e.svg)
+
 Design Router GPT-5.5 MCP is an open-source MCP server and packet compiler for
 frontend generation. It takes a product brief, routes it through a curated design
 library, and returns a compact build packet with layout direction, source-backed
@@ -71,6 +76,22 @@ The anti-copy layer exists for this exact reason:
   for missing proof, and their own visual composition;
 - support-bank examples are used to triangulate layout patterns, not to recreate
   one donor page.
+
+## Zero-Shot Visual Proof
+
+These frames come from local screen recordings of the same speaker-company
+prompt run zero-shot. The two comparison clips are the first and second attempts
+without the Design Router packet. The selected run uses the packet-guided MCP
+flow. This is visual evidence for first-pass direction, not a formal benchmark.
+
+| First try, no packet | Second try, no packet | Packet-guided run |
+|---|---|---|
+| <img src="docs/assets/zero-shot-proofs/baseline-try-1.jpg" alt="First zero-shot speaker-company attempt without the Design Router packet" width="260"> | <img src="docs/assets/zero-shot-proofs/baseline-try-2.jpg" alt="Second zero-shot speaker-company attempt without the Design Router packet" width="260"> | <img src="docs/assets/zero-shot-proofs/mcp-good-01.jpg" alt="Packet-guided zero-shot speaker-company homepage generated with Design Router GPT-5.5 MCP" width="260"> |
+
+The packet-guided run carried the speaker-company direction past the hero into
+deeper product sections and inquiry flow:
+
+<img src="docs/assets/zero-shot-proofs/mcp-good-02.jpg" alt="Interior section from the packet-guided speaker-company homepage" width="720">
 
 ## Install
 
