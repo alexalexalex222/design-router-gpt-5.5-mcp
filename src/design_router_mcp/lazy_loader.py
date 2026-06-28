@@ -89,30 +89,55 @@ def _slug_from_block(block: str, fallback: str) -> str:
     return "-".join(words[:5]) or fallback
 
 
+# Interior blocks worth pulling as component snippets when a build has few
+# top-level <section> tags (app shells, dashboards, editors wrap everything in one
+# <main> of nested divs). Matched against the element's opening tag only.
+_PANEL_CLASS_RE = re.compile(
+    r"class(?:Name)?=['\"][^'\"]*\b("
+    r"panel|card|sidebar|side-?nav|side-?bar|toolbar|table|board|canvas|chart|graph|"
+    r"grid|widget|stat|kpi|metric|column|drawer|inspector|console|editor|tabs?|"
+    r"dialog|modal|palette|tree|list-?view"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
 def _extract_section_job_excerpts_from_text(markup: str, *, example_id: str, max_sections: int = 4, max_chars: int = 2200) -> list[CodeFile]:
     if not markup:
         return []
     excerpts: list[CodeFile] = []
     seen: set[str] = set()
-    pattern = re.compile(r"<(section|main|header|footer)\b[^>]*>", re.IGNORECASE)
-    for match in pattern.finditer(markup):
-        tag_name = match.group(1).lower()
-        block = _find_balanced_block(markup, match.start(), tag_name)
+
+    def _try_add(tag_name: str, start: int) -> None:
+        block = _find_balanced_block(markup, start, tag_name)
         lowered = block.lower()
         if not block or len(block) < 180:
-            continue
+            return
         if not any(marker in lowered for marker in ("<h1", "<h2", "<h3", "class=", "classname=")):
-            continue
+            return
         slug = _slug_from_block(block, f"{tag_name}-{len(excerpts) + 1:02d}")
-        label = f"{example_id}/section-{len(excerpts) + 1:02d}-{slug}.html"
         content = _trim(block, max_chars)
         fingerprint = re.sub(r"\s+", " ", content[:420]).strip()
         if fingerprint in seen:
-            continue
+            return
         seen.add(fingerprint)
-        excerpts.append(CodeFile(label=label, language="html", content=content))
+        excerpts.append(CodeFile(label=f"{example_id}/section-{len(excerpts) + 1:02d}-{slug}.html", language="html", content=content))
+
+    # Pass 1: top-level semantic regions (landing pages fill this with <section>s).
+    for match in re.compile(r"<(section|main|header|footer|aside|nav)\b[^>]*>", re.IGNORECASE).finditer(markup):
         if len(excerpts) >= max_sections:
-            break
+            return excerpts
+        _try_add(match.group(1).lower(), match.start())
+
+    # Pass 2: labeled interior panels — surfaces real component pieces from app /
+    # dashboard / editor builds that have one big <main> instead of many sections.
+    if len(excerpts) < max_sections:
+        for match in re.compile(r"<(div|section|article|aside)\b[^>]*>", re.IGNORECASE).finditer(markup):
+            if len(excerpts) >= max_sections:
+                break
+            if not _PANEL_CLASS_RE.search(match.group(0)):
+                continue
+            _try_add(match.group(1).lower(), match.start())
     return excerpts
 
 
@@ -267,8 +292,12 @@ def _load_example(pack_dir: Path, manifest: PackManifest, example_id: str, *, in
         if not source_path.is_absolute():
             source_path = pack_dir / source_path
         source_markup = sanitize_source_text(_read_source_markup(source_path, max_chars=max_code_chars * 2))
+        # Section snippets scan a wider window than the hero excerpt: large app-style
+        # builds (45-80KB) keep their substantive interior panels well past the hero
+        # excerpt's cutoff. Each emitted snippet is still capped by max_chars below.
+        section_markup = sanitize_source_text(_read_source_markup(source_path, max_chars=max(max_code_chars * 2, 60000)))
         section_job_excerpts = _extract_section_job_excerpts_from_text(
-            source_markup,
+            section_markup,
             example_id=example_id,
             max_chars=min(max_code_chars, 2400),
         )
